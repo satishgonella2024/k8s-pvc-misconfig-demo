@@ -19,3 +19,13 @@ PersistentVolumeClaims (PVCs) that are not deleted after their associated applic
    ```bash
    kubectl delete pvc pvc-orphaned-pvcs
 
+## Observations After Pod Deletion
+
+- **PVC Status:** Remained `Bound` after the Pod was deleted, consuming the associated PV.
+- **PV Status:** Remained `Bound` to the PVC due to the `Retain` reclaim policy, making the storage unavailable for reuse.
+
+## Solution
+
+1. Manually delete the orphaned PVC:
+   ```bash
+   kubectl delete pvc pvc-orphaned-pvcs
