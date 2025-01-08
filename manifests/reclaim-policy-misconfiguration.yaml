@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-reclaim-policy
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/pv-reclaim-policy"
+  persistentVolumeReclaimPolicy: Delete  # High-risk policy
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-reclaim-policy
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-reclaim-policy
+spec:
+  containers:
+  - name: app
+    image: nginx
+    volumeMounts:
+    - mountPath: "/usr/share/nginx/html"
+      name: storage
+  volumes:
+  - name: storage
+    persistentVolumeClaim:
+      claimName: pvc-reclaim-policy

@@ -1,26 +1,4 @@
-Your output shows that the PVC is in a `Pending` state because no Persistent Volume (PV) is available that matches the PVC's requirements, and no `StorageClass` is set. This is the expected behavior for the **Storage Exhaustion** scenario. Let’s document and proceed:
 
----
-
-### **Analysis of the Issue**
-- **Problem:**
-  - The PVC is requesting `2Gi` of storage, but the only PV available (`pv-storage-exhaustion`) has a capacity of `1Gi`.
-  - No `StorageClass` is set, so the PVC cannot dynamically provision storage.
-  
-- **Observation:**
-  - PVC status is `Pending`.
-  - The associated pod (`pod-storage-exhaustion`) is also in `Pending` state because it cannot mount the unbound PVC.
-
----
-
-### **Document the Results**
-1. Create a documentation file for this scenario:
-   ```bash
-   touch docs/storage-exhaustion.md
-   ```
-
-2. Add the following content to `docs/storage-exhaustion.md`:
-   ```markdown
    # Scenario 1: Storage Exhaustion
 
    ## Issue
@@ -60,6 +38,5 @@ Your output shows that the PVC is in a `Pending` state because no Persistent Vol
      ```bash
      kubectl describe pvc pvc-storage-exhaustion
      ```
-   ```
 
 ---

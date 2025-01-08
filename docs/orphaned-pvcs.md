@@ -18,14 +18,38 @@ PersistentVolumeClaims (PVCs) that are not deleted after their associated applic
 1. Manually delete the orphaned PVCs to free up storage resources:
    ```bash
    kubectl delete pvc pvc-orphaned-pvcs
+   
+2. Reset or delete the PV:
+   - **Reset the PV for reuse**:
+     ```bash
+     kubectl patch pv pv-orphaned-pvcs -p '{"spec":{"claimRef": null}}'
+     ```
+   - **Delete the PV**:
+     ```bash
+     kubectl delete pv pv-orphaned-pvcs
+     ```
 
-## Observations After Pod Deletion
+## Lessons Learned
+- Orphaned PVCs unnecessarily consume cluster resources.
+- Automate cleanup tasks or use owner references to ensure PVCs are deleted with dependent applications.
+- Regular audits of PVC and PV resources can prevent storage mismanagement.
 
-- **PVC Status:** Remained `Bound` after the Pod was deleted, consuming the associated PV.
-- **PV Status:** Remained `Bound` to the PVC due to the `Retain` reclaim policy, making the storage unavailable for reuse.
+## Commands Used
+- **Deploy resources**:
+  ```bash
+  kubectl apply -f manifests/orphaned-pvcs.yaml
+  ```
+- **Delete Pod**:
+  ```bash
+  kubectl delete pod pod-orphaned-pvcs
+  ```
+- **Delete PVC**:
+  ```bash
+  kubectl delete pvc pvc-orphaned-pvcs
+  ```
+- **Delete PV**:
+  ```bash
+  kubectl delete pv pv-orphaned-pvcs
+  ```
 
-## Solution
-
-1. Manually delete the orphaned PVC:
-   ```bash
-   kubectl delete pvc pvc-orphaned-pvcs
+---
